@@ -3,7 +3,7 @@ Unless explicitly contradicted below, assume that all of Apple's guidelines appl
 
 ## Whitespace
 
- * Tabs, not spaces.
+ * 4 spaces for a tab (like Xcode does).
  * End files with a newline.
  * Make liberal use of vertical whitespace to divide code into logical chunks.
  * Don’t leave trailing whitespace.
@@ -13,37 +13,38 @@ Unless explicitly contradicted below, assume that all of Apple's guidelines appl
 
  * All method declarations should be documented.
  * Comments should be hard-wrapped at 80 characters.
- * Comments should be [Tomdoc](http://tomdoc.org/)-style.
+ * Comments should be parseable by Xcode and be appledoc compatible. Use [VVDocumenter-Xcode](https://github.com/onevcat/VVDocumenter-Xcode) to generate comments/class documentation.
  * Document whether object parameters allow `nil` as a value.
  * Use `#pragma mark`s to categorize methods into functional groupings and protocol implementations, following this general structure:
+ * Make use of pragma mark with `-`'s for good organization
 
 ```objc
-#pragma mark Properties
+#pragma mark - Properties
 
 @dynamic someProperty;
 
 - (void)setCustomProperty:(id)value {}
 
-#pragma mark Lifecycle
+#pragma mark - Lifecycle
 
 + (instancetype)objectWithThing:(id)thing {}
 - (instancetype)init {}
 
-#pragma mark Drawing
+#pragma mark - Drawing
 
 - (void)drawRect:(CGRect) {}
 
-#pragma mark Another functional grouping
+#pragma mark - Another functional grouping
 
-#pragma mark GHSuperclass
+#pragma mark - Superclass
 
 - (void)someOverriddenMethod {}
 
-#pragma mark NSCopying
+#pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone {}
 
-#pragma mark NSObject
+#pragma mark - NSObject
 
 - (NSString *)description {}
 ```
@@ -52,12 +53,13 @@ Unless explicitly contradicted below, assume that all of Apple's guidelines appl
 
  * Never declare an ivar unless you need to change its type from its declared property.
  * Don’t use line breaks in method declarations.
- * Prefer exposing an immutable type for a property if it being mutable is an implementation detail. This is a valid reason to declare an ivar for a property.
- * Always declare memory-management semantics even on `readonly` properties.
+ Always declare memory-management semantics even on `readonly`
+ * Always declare non-atomic
+ * Prefer lazy instantiation for readonly properties
  * Declare properties `readonly` if they are only set once in `-init`.
  * Don't use `@synthesize` unless the compiler requires it. Note that optional properties in protocols must be explicitly synthesized in order to exist.
  * Declare properties `copy` if they return immutable objects and aren't ever mutated in the implementation. `strong` should only be used when exposing a mutable object, or an object that does not conform to `<NSCopying>`.
- * Avoid `weak` properties whenever possible. A long-lived weak reference is usually a code smell that should be refactored out.
+ *  `weak` properties should be used for delegates
  * Instance variables should be prefixed with an underscore (just like when implicitly synthesized).
  * Don't put a space between an object type and the protocol it conforms to.
 
@@ -69,7 +71,7 @@ Unless explicitly contradicted below, assume that all of Apple's guidelines appl
  * C function declarations should have no space before the opening parenthesis, and should be namespaced just like a class.
 
 ```objc
-void GHAwesomeFunction(BOOL hasSomeArgs);
+void AwesomeFunction(BOOL hasSomeArgs);
 ```
 
  * Constructors should generally return [`instancetype`](http://clang.llvm.org/docs/LanguageExtensions.html#related-result-types) rather than `id`.
